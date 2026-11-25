@@ -13,20 +13,32 @@ OK
 
 ### Induction on the natural numbers
 
-Let $\mathbb{N} = \{0, 1, 2, \dots\}$. We use the **well-ordering principle**: every non-empty subset of $\mathbb{N}$ has a least element.
+Let $\mathbb{N} = \{0, 1, 2, \dots\}$ be the set of natural numbers, ordered by $<$.
 
-**Theorem (induction).** Let $P$ be a property of natural numbers. If
+**Well-ordering principle.** Every non-empty subset of $\mathbb{N}$ has a least element:
 
-1. $P(0)$ holds, and
-2. for every $n \in \mathbb{N}$, $P(n)$ implies $P(n+1)$,
+$$\forall S \subseteq \mathbb{N}.\;\; S \neq \varnothing \;\Longrightarrow\; \exists m \in S.\;\; \forall s \in S.\;\; m \leq s .$$
 
-then $P(n)$ holds for every $n \in \mathbb{N}$.
+**Theorem (induction).** Let $P$ be a predicate on $\mathbb{N}$. Then
 
-*Proof (least counterexample).* Suppose the conclusion is false. Then
+$$\Big( P(0) \;\wedge\; \forall n \in \mathbb{N}.\; \big(P(n) \Rightarrow P(n+1)\big) \Big) \;\Longrightarrow\; \forall n \in \mathbb{N}.\; P(n) .$$
+
+*Proof (least counterexample).* Assume the hypothesis
+
+$$\text{(B)}\;\; P(0) \qquad\text{and}\qquad \text{(S)}\;\; \forall n \in \mathbb{N}.\; \big(P(n) \Rightarrow P(n+1)\big),$$
+
+and suppose, for a contradiction, that $\neg\,\forall n \in \mathbb{N}.\, P(n)$, that is, $\exists n \in \mathbb{N}.\, \neg P(n)$. Then the set of counterexamples
 
 $$S = \{\, n \in \mathbb{N} \mid \neg P(n) \,\}$$
 
-is non-empty, so by well-ordering it has a least element $m$. By (1), $m \neq 0$, so $m = k + 1$ for some $k \in \mathbb{N}$. Since $k < m$ and $m$ is the least element of $S$, we have $k \notin S$, that is, $P(k)$ holds. By (2), $P(k+1)$ holds, that is, $P(m)$ holds. This contradicts $m \in S$. Hence $S = \emptyset$. $\blacksquare$
+is non-empty. By well-ordering, there is $m \in S$ with $m \leq s$ for all $s \in S$. Now:
+
+1. $m \neq 0$, because $P(0)$ holds by (B) while $\neg P(m)$ holds since $m \in S$.
+2. Hence $m \geq 1$, so $m = k + 1$ for some $k \in \mathbb{N}$, and $k < m$.
+3. By minimality of $m$, $k \notin S$ (otherwise $m \leq k$). So $P(k)$ holds.
+4. By (S) applied to $n = k$, we get $P(k+1)$, that is, $P(m)$.
+
+This contradicts $m \in S$, i.e. $\neg P(m)$. Therefore $S = \varnothing$, which means $\forall n \in \mathbb{N}.\, P(n)$. $\blacksquare$
 
 ### Structural induction on inductive data types
 
@@ -42,15 +54,19 @@ $$h(C(a_1, \dots, a_k)) = \begin{cases} 0 & \text{if no } a_i \text{ has type } 
 
 Each argument $a_i$ of the same type $T$ is a *strict subterm* of $C(a_1,\dots,a_k)$, and its height is strictly smaller.
 
-**Theorem (structural induction).** Let $T$ be an inductive type with constructors $C_1, \dots, C_r$ and let $P$ be a property of values of $T$. Suppose that for every constructor $C = C_j$ with arguments $a_1, \dots, a_k$:
+**Theorem (structural induction).** Let $T$ be an inductive type with constructors $C_1, \dots, C_r$, where $C_j$ takes arguments of types $\tau_{j,1}, \dots, \tau_{j,k_j}$, and let $P$ be a predicate on $T$. Write $I_j = \{\, i \mid \tau_{j,i} = T \,\}$ for the positions of the recursive arguments of $C_j$. Then
 
-> if $P(a_i)$ holds for every argument $a_i$ of type $T$, then $P(C(a_1,\dots,a_k))$ holds.
+$$\Big( \forall j \in \{1,\dots,r\}.\;\; \forall a_1 \in \tau_{j,1}, \dots, a_{k_j} \in \tau_{j,k_j}.\;\; \big(\textstyle\bigwedge_{i \in I_j} P(a_i)\big) \Rightarrow P\big(C_j(a_1,\dots,a_{k_j})\big) \Big) \;\Longrightarrow\; \forall v \in T.\; P(v) .$$
 
-Then $P(v)$ holds for every $v \in T$.
+The conjunction $\bigwedge_{i \in I_j} P(a_i)$ is the *induction hypothesis*. It is empty (hence true) when $I_j = \varnothing$, and the premise then says $P(C_j(a_1,\dots,a_{k_j}))$ outright: this is a base case.
 
-*Proof.* Suppose some value is a counterexample. The set of heights of counterexamples is a non-empty subset of $\mathbb{N}$, so it has a least element; pick a counterexample $v = C(a_1,\dots,a_k)$ of that least height. Every argument $a_i$ of type $T$ has smaller height, so it is not a counterexample: $P(a_i)$ holds. By the hypothesis for $C$, $P(v)$ holds, a contradiction. $\blacksquare$
+*Proof.* Assume the premise, and suppose $\exists v \in T.\, \neg P(v)$. The set of heights of counterexamples
 
-For constructors with no argument of type $T$ (like `Nil` or `Zero`) the hypothesis is vacuous, so the statement requires $P(C(\dots))$ outright. This is the base case. For $T = \mathsf{Nat}$ with constructors `Zero` and `Succ`, the height of $\mathsf{Succ}^n(\mathsf{Zero})$ is $n$ and the theorem is exactly the ordinary induction principle above.
+$$H = \{\, h(v) \mid v \in T,\; \neg P(v) \,\} \subseteq \mathbb{N}$$
+
+is non-empty, so by well-ordering it has a least element $h_0$. Pick a counterexample $v = C_j(a_1,\dots,a_{k_j})$ with $h(v) = h_0$. For every $i \in I_j$ we have $h(a_i) < h(v) = h_0$, so $h(a_i) \notin H$ by minimality, i.e. $P(a_i)$ holds. Thus $\bigwedge_{i \in I_j} P(a_i)$ holds, and the premise for $C_j$ gives $P(v)$. This contradicts $\neg P(v)$. Hence $\forall v \in T.\, P(v)$. $\blacksquare$
+
+**Special case.** For $T = \mathsf{Nat}$ with constructors `Zero` ($I_1 = \varnothing$) and `Succ` ($I_2 = \{1\}$), the premise reads $P(\mathsf{Zero}) \wedge \forall a.\,(P(a) \Rightarrow P(\mathsf{Succ}(a)))$. Since $h(\mathsf{Succ}^n(\mathsf{Zero})) = n$, this is exactly the ordinary induction principle above.
 
 ### What the checker relies on
 
