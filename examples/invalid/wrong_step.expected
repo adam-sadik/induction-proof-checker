@@ -1,0 +1,1 @@
+examples/invalid/wrong_step.proof:15:5: cannot justify step 'add(Succ(k), Zero) = Succ(k)' by def add: rule gives 'Succ(add(k, Zero))', expected 'Succ(k)'

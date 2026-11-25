@@ -1,0 +1,1 @@
+examples/invalid/not_structural.proof:6:1: recursion is not structural: in the call 'f(Succ(n))', no argument is a strict subterm of the matching pattern

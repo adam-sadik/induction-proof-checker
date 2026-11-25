@@ -1,0 +1,1 @@
+examples/invalid/overlapping_equations.proof:6:1: equation overlaps with the one at line 5: 'f(Zero)' and 'f(n)' can match the same arguments

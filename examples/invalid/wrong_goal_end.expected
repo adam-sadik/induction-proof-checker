@@ -1,0 +1,1 @@
+examples/invalid/wrong_goal_end.proof:15:5: the chain ends with 'Succ(add(k, Zero))', but the goal's right-hand side is 'Succ(k)'

@@ -1,0 +1,1 @@
+examples/invalid/ih_not_general.proof:17:5: cannot justify step 'Succ(k) = Succ(add(Succ(k), Zero))' by <- IH: rule gives 'Succ(add(k, Zero))', expected 'Succ(add(Succ(k), Zero))'

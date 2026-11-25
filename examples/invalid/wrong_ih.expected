@@ -1,0 +1,1 @@
+examples/invalid/wrong_ih.proof:13:3: wrong induction hypothesis: expected [IH: add(k, Zero) = k], found [IH: add(Zero, k) = k]

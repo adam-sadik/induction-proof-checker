@@ -1,0 +1,1 @@
+examples/invalid/circular_lemma.proof:12:5: unknown lemma 'add_zero_right' (a lemma can only be used after its proof)

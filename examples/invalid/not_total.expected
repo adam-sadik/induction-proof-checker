@@ -1,0 +1,1 @@
+examples/invalid/not_total.proof:4:1: 'pred' is not total: no equation for 'pred(Zero)'
