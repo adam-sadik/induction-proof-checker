@@ -1,4 +1,6 @@
 package proofchecker.cli
 
 @main def main(args: String*): Unit =
-  println("induction-proof-checker: not implemented yet")
+  val (code, message) = Cli.run(args.toList)
+  if code == Cli.ExitOk then println(message) else System.err.println(message)
+  sys.exit(code)
