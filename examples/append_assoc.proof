@@ -1,0 +1,23 @@
+-- Associativity of list append
+
+data Nat  = Zero | Succ(Nat)
+data List = Nil | Cons(Nat, List)
+
+def append : (List, List) -> List
+def append(Nil, ys)         = ys
+def append(Cons(x, xs), ys) = Cons(x, append(xs, ys))
+
+theorem append_assoc: forall xs: List, ys: List, zs: List.
+    append(append(xs, ys), zs) = append(xs, append(ys, zs))
+proof by induction on xs:
+  case Nil:
+    append(append(Nil, ys), zs)
+    = append(ys, zs)                       by def append
+    = append(Nil, append(ys, zs))          by <- def append
+  case Cons(h, t) [IH: append(append(t, ys), zs) = append(t, append(ys, zs))]:
+    append(append(Cons(h, t), ys), zs)
+    = append(Cons(h, append(t, ys)), zs)   by def append
+    = Cons(h, append(append(t, ys), zs))   by def append
+    = Cons(h, append(t, append(ys, zs)))   by IH
+    = append(Cons(h, t), append(ys, zs))   by <- def append
+qed

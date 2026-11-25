@@ -1,0 +1,20 @@
+-- Lists of naturals: the empty list is a right identity of append.
+-- Cons has a non-recursive argument (the head), which gets no induction hypothesis.
+
+data Nat  = Zero | Succ(Nat)
+data List = Nil | Cons(Nat, List)
+
+def append : (List, List) -> List
+def append(Nil, ys)        = ys
+def append(Cons(x, xs), ys) = Cons(x, append(xs, ys))
+
+theorem append_nil: forall xs: List. append(xs, Nil) = xs
+proof by induction on xs:
+  case Nil:
+    append(Nil, Nil)
+    = Nil                          by def append
+  case Cons(h, t) [IH: append(t, Nil) = t]:
+    append(Cons(h, t), Nil)
+    = Cons(h, append(t, Nil))      by def append
+    = Cons(h, t)                   by IH
+qed

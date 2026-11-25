@@ -1,0 +1,21 @@
+-- Associativity of addition: induction on the first of three variables
+
+data Nat = Zero | Succ(Nat)
+
+def add : (Nat, Nat) -> Nat
+def add(Zero, m)    = m
+def add(Succ(n), m) = Succ(add(n, m))
+
+theorem add_assoc: forall a: Nat, b: Nat, c: Nat. add(add(a, b), c) = add(a, add(b, c))
+proof by induction on a:
+  case Zero:
+    add(add(Zero, b), c)
+    = add(b, c)                    by def add
+    = add(Zero, add(b, c))         by <- def add
+  case Succ(k) [IH: add(add(k, b), c) = add(k, add(b, c))]:
+    add(add(Succ(k), b), c)
+    = add(Succ(add(k, b)), c)      by def add
+    = Succ(add(add(k, b), c))      by def add
+    = Succ(add(k, add(b, c)))      by IH
+    = add(Succ(k), add(b, c))      by <- def add
+qed

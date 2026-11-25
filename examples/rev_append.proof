@@ -1,0 +1,54 @@
+-- Reversing an append swaps the two lists. Uses append_nil and append_assoc as lemmas.
+
+data Nat  = Zero | Succ(Nat)
+data List = Nil | Cons(Nat, List)
+
+def append : (List, List) -> List
+def append(Nil, ys)         = ys
+def append(Cons(x, xs), ys) = Cons(x, append(xs, ys))
+
+def rev : (List) -> List
+def rev(Nil)         = Nil
+def rev(Cons(x, xs)) = append(rev(xs), Cons(x, Nil))
+
+theorem append_nil: forall xs: List. append(xs, Nil) = xs
+proof by induction on xs:
+  case Nil:
+    append(Nil, Nil)
+    = Nil                          by def append
+  case Cons(h, t) [IH: append(t, Nil) = t]:
+    append(Cons(h, t), Nil)
+    = Cons(h, append(t, Nil))      by def append
+    = Cons(h, t)                   by IH
+qed
+
+theorem append_assoc: forall xs: List, ys: List, zs: List.
+    append(append(xs, ys), zs) = append(xs, append(ys, zs))
+proof by induction on xs:
+  case Nil:
+    append(append(Nil, ys), zs)
+    = append(ys, zs)                       by def append
+    = append(Nil, append(ys, zs))          by <- def append
+  case Cons(h, t) [IH: append(append(t, ys), zs) = append(t, append(ys, zs))]:
+    append(append(Cons(h, t), ys), zs)
+    = append(Cons(h, append(t, ys)), zs)   by def append
+    = Cons(h, append(append(t, ys), zs))   by def append
+    = Cons(h, append(t, append(ys, zs)))   by IH
+    = append(Cons(h, t), append(ys, zs))   by <- def append
+qed
+
+theorem rev_append: forall xs: List, ys: List. rev(append(xs, ys)) = append(rev(ys), rev(xs))
+proof by induction on xs:
+  case Nil:
+    rev(append(Nil, ys))
+    = rev(ys)                              by def append
+    = append(rev(ys), Nil)                 by <- lemma append_nil
+    = append(rev(ys), rev(Nil))            by <- def rev
+  case Cons(h, t) [IH: rev(append(t, ys)) = append(rev(ys), rev(t))]:
+    rev(append(Cons(h, t), ys))
+    = rev(Cons(h, append(t, ys)))                          by def append
+    = append(rev(append(t, ys)), Cons(h, Nil))             by def rev
+    = append(append(rev(ys), rev(t)), Cons(h, Nil))        by IH
+    = append(rev(ys), append(rev(t), Cons(h, Nil)))        by lemma append_assoc
+    = append(rev(ys), rev(Cons(h, t)))                     by <- def rev
+qed

@@ -1,0 +1,17 @@
+-- The written induction hypothesis is not the one the checker generates.
+data Nat = Zero | Succ(Nat)
+
+def add : (Nat, Nat) -> Nat
+def add(Zero, m)    = m
+def add(Succ(n), m) = Succ(add(n, m))
+
+theorem add_zero_right: forall n: Nat. add(n, Zero) = n
+proof by induction on n:
+  case Zero:
+    add(Zero, Zero)
+    = Zero                    by def add
+  case Succ(k) [IH: add(Zero, k) = k]:
+    add(Succ(k), Zero)
+    = Succ(add(k, Zero))      by def add
+    = Succ(k)                 by IH
+qed

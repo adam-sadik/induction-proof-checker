@@ -1,0 +1,13 @@
+-- The Succ case is missing.
+data Nat = Zero | Succ(Nat)
+
+def add : (Nat, Nat) -> Nat
+def add(Zero, m)    = m
+def add(Succ(n), m) = Succ(add(n, m))
+
+theorem add_zero_right: forall n: Nat. add(n, Zero) = n
+proof by induction on n:
+  case Zero:
+    add(Zero, Zero)
+    = Zero                    by def add
+qed

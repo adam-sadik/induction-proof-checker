@@ -1,0 +1,8 @@
+-- Two equations match f(Zero), so the result would be ambiguous.
+data Nat = Zero | Succ(Nat)
+
+def f : (Nat) -> Nat
+def f(Zero)    = Zero
+def f(n)       = Succ(n)
+def f(Succ(n)) = n
+

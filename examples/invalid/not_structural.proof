@@ -1,0 +1,7 @@
+-- The recursive call is not on a strict subterm, so f may not terminate.
+data Nat = Zero | Succ(Nat)
+
+def f : (Nat) -> Nat
+def f(Zero)    = Zero
+def f(Succ(n)) = f(Succ(n))
+

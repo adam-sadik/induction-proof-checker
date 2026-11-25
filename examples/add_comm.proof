@@ -1,0 +1,44 @@
+-- Commutativity of addition, using two lemmas proven earlier in the file
+
+data Nat = Zero | Succ(Nat)
+
+def add : (Nat, Nat) -> Nat
+def add(Zero, m)    = m
+def add(Succ(n), m) = Succ(add(n, m))
+
+theorem add_zero_right: forall n: Nat. add(n, Zero) = n
+proof by induction on n:
+  case Zero:
+    add(Zero, Zero)
+    = Zero                     by def add
+  case Succ(k) [IH: add(k, Zero) = k]:
+    add(Succ(k), Zero)
+    = Succ(add(k, Zero))       by def add
+    = Succ(k)                  by IH
+qed
+
+theorem add_succ_right: forall n: Nat, m: Nat. add(n, Succ(m)) = Succ(add(n, m))
+proof by induction on n:
+  case Zero:
+    add(Zero, Succ(m))
+    = Succ(m)                  by def add
+    = Succ(add(Zero, m))       by <- def add
+  case Succ(k) [IH: add(k, Succ(m)) = Succ(add(k, m))]:
+    add(Succ(k), Succ(m))
+    = Succ(add(k, Succ(m)))    by def add
+    = Succ(Succ(add(k, m)))    by IH
+    = Succ(add(Succ(k), m))    by <- def add
+qed
+
+theorem add_comm: forall n: Nat, m: Nat. add(n, m) = add(m, n)
+proof by induction on n:
+  case Zero:
+    add(Zero, m)
+    = m                        by def add
+    = add(m, Zero)             by <- lemma add_zero_right
+  case Succ(k) [IH: add(k, m) = add(m, k)]:
+    add(Succ(k), m)
+    = Succ(add(k, m))          by def add
+    = Succ(add(m, k))          by IH
+    = add(m, Succ(k))          by <- lemma add_succ_right
+qed

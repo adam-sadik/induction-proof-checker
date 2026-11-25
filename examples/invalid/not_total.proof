@@ -1,0 +1,6 @@
+-- The definition of pred does not cover Zero.
+data Nat = Zero | Succ(Nat)
+
+def pred : (Nat) -> Nat
+def pred(Succ(n)) = n
+

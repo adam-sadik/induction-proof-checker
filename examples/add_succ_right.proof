@@ -1,0 +1,20 @@
+-- n + S(m) = S(n + m): induction on n, with m fixed
+
+data Nat = Zero | Succ(Nat)
+
+def add : (Nat, Nat) -> Nat
+def add(Zero, m)    = m
+def add(Succ(n), m) = Succ(add(n, m))
+
+theorem add_succ_right: forall n: Nat, m: Nat. add(n, Succ(m)) = Succ(add(n, m))
+proof by induction on n:
+  case Zero:
+    add(Zero, Succ(m))
+    = Succ(m)                  by def add
+    = Succ(add(Zero, m))       by <- def add
+  case Succ(k) [IH: add(k, Succ(m)) = Succ(add(k, m))]:
+    add(Succ(k), Succ(m))
+    = Succ(add(k, Succ(m)))    by def add
+    = Succ(Succ(add(k, m)))    by IH
+    = Succ(add(Succ(k), m))    by <- def add
+qed
